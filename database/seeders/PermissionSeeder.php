@@ -35,6 +35,12 @@ class PermissionSeeder extends Seeder
         'invoices.create',
         'payments.record',
         'finance.reports',
+        'allocations.view',
+        'allocations.manage',
+        'marks.enter',
+        'marks.publish',
+        'results.view',
+        'results.view-own',
     ];
 
     public function run(): void

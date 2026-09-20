@@ -19,4 +19,14 @@ class Course extends Model
     {
         return $this->hasMany(CourseRegistration::class);
     }
+
+    public function registrations(): HasMany
+    {
+        return $this->courseRegistrations();
+    }
+
+    public function allocations(): HasMany
+    {
+        return $this->hasMany(CourseAllocation::class);
+    }
 }

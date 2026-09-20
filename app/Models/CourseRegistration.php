@@ -26,4 +26,9 @@ class CourseRegistration extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function courseResult(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(CourseResult::class);
+    }
 }

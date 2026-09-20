@@ -35,17 +35,6 @@ class RolePermissionSeeder extends Seeder
 
         Role::findByName('Super Administrator', 'web')->syncPermissions($all);
 
-        Role::findByName('Registrar', 'web')->syncPermissions([
-            'users.view',
-            'users.create',
-            'users.update',
-            'users.activate',
-            'roles.view',
-            ...$studentMgmt,
-            'fees.view',
-            'invoices.view',
-        ]);
-
         Role::findByName('Finance Officer', 'web')->syncPermissions([
             'users.view',
             'students.view',
@@ -64,6 +53,9 @@ class RolePermissionSeeder extends Seeder
         Role::findByName('Lecturer', 'web')->syncPermissions([
             'students.view',
             'registrations.view',
+            'allocations.view',
+            'marks.enter',
+            'results.view',
         ]);
         Role::findByName('Head of Department', 'web')->syncPermissions([
             'users.view',
@@ -73,10 +65,29 @@ class RolePermissionSeeder extends Seeder
             'registrations.approve',
             'fees.view',
             'invoices.view',
+            'allocations.manage',
+            'allocations.view',
+            'marks.publish',
+            'results.view',
+        ]);
+        Role::findByName('Registrar', 'web')->syncPermissions([
+            'users.view',
+            'users.create',
+            'users.update',
+            'users.activate',
+            'roles.view',
+            ...$studentMgmt,
+            'fees.view',
+            'invoices.view',
+            'allocations.manage',
+            'allocations.view',
+            'marks.publish',
+            'results.view',
         ]);
         Role::findByName('Student', 'web')->syncPermissions([
             'registrations.register',
             'invoices.view-own',
+            'results.view-own',
         ]);
     }
 }

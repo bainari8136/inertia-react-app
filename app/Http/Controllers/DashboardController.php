@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Applicant;
+use App\Models\CourseAllocation;
 use App\Models\CourseRegistration;
+use App\Models\CourseResult;
 use App\Models\SemesterRegistration;
 use App\Models\Student;
 use App\Models\User;
@@ -26,7 +28,7 @@ class DashboardController extends Controller
         }
 
         if ($user->hasRole('Lecturer')) {
-            return $this->lecturerDashboard();
+            return $this->lecturerDashboard($user);
         }
 
         if ($user->hasRole('Student')) {
@@ -53,13 +55,29 @@ class DashboardController extends Controller
         ]);
     }
 
-    private function lecturerDashboard()
+    private function lecturerDashboard(User $user)
     {
+        $allocatedCourseIds = CourseAllocation::where('lecturer_id', $user->id)->pluck('course_id');
+
+        $studentCount = Student::where('status', Student::STATUS_ACTIVE)
+            ->whereHas('semesterRegistrations.courseRegistrations', function ($q) use ($allocatedCourseIds) {
+                $q->whereIn('course_id', $allocatedCourseIds)
+                    ->where('status', CourseRegistration::STATUS_ENROLLED);
+            })
+            ->count();
+
+        $pendingGrading = CourseAllocation::where('lecturer_id', $user->id)
+            ->whereHas('course.registrations', function ($q) {
+                $q->where('status', CourseRegistration::STATUS_ENROLLED)
+                    ->whereDoesntHave('courseResult', fn ($r) => $r->where('status', CourseResult::STATUS_PUBLISHED));
+            })
+            ->count();
+
         return Inertia::render('Dashboard/Lecturer', [
             'stats' => [
-                'assigned_courses' => 0,
-                'student_count' => Student::where('status', Student::STATUS_ACTIVE)->count(),
-                'pending_grading' => 0,
+                'assigned_courses' => CourseAllocation::where('lecturer_id', $user->id)->count(),
+                'student_count' => $studentCount,
+                'pending_grading' => $pendingGrading,
             ],
         ]);
     }
@@ -70,6 +88,7 @@ class DashboardController extends Controller
 
         $registeredCourses = 0;
         $feeBalance = 0;
+        $resultsPublished = 0;
 
         if ($student) {
             $registeredCourses = CourseRegistration::query()
@@ -81,6 +100,13 @@ class DashboardController extends Controller
                 ->count();
 
             $feeBalance = $this->financeService->studentOutstandingBalance($student);
+
+            $resultsPublished = CourseResult::query()
+                ->where('status', CourseResult::STATUS_PUBLISHED)
+                ->whereHas('courseRegistration.semesterRegistration', function ($q) use ($student) {
+                    $q->where('student_id', $student->id);
+                })
+                ->count();
         }
 
         return Inertia::render('Dashboard/Student', [
@@ -94,7 +120,7 @@ class DashboardController extends Controller
             'stats' => [
                 'registered_courses' => $registeredCourses,
                 'fee_balance' => $feeBalance,
-                'results_published' => 0,
+                'results_published' => $resultsPublished,
             ],
         ]);
     }

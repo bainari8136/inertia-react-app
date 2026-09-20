@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AcademicSeeder::class,
             RegistrationCalendarSeeder::class,
             FinanceSeeder::class,
+            ExaminationSeeder::class,
         ]);
 
         $user = User::query()->firstOrCreate(

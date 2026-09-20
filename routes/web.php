@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AcademicController;
+use App\Http\Controllers\AcademicResultController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CourseAllocationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExamMarkController;
 use App\Http\Controllers\FeeStructureController;
 use App\Http\Controllers\FinanceReportController;
 use App\Http\Controllers\InvoiceController;
@@ -55,6 +58,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/academic/semesters', [AcademicController::class, 'storeSemester'])->name('academic.semesters.store');
     Route::get('/academic/courses', [AcademicController::class, 'courses'])->name('academic.courses');
     Route::post('/academic/courses', [AcademicController::class, 'storeCourse'])->name('academic.courses.store');
+
+    Route::get('/academic/allocations', [CourseAllocationController::class, 'index'])->name('academic.allocations.index');
+    Route::post('/academic/allocations', [CourseAllocationController::class, 'store'])->name('academic.allocations.store');
+    Route::delete('/academic/allocations/{allocation}', [CourseAllocationController::class, 'destroy'])->name('academic.allocations.destroy');
+
+    Route::get('/academic/marks', [ExamMarkController::class, 'index'])->name('academic.marks.index');
+    Route::get('/academic/marks/{allocation}', [ExamMarkController::class, 'show'])->name('academic.marks.show');
+    Route::post('/academic/marks/{allocation}', [ExamMarkController::class, 'store'])->name('academic.marks.store');
+    Route::post('/academic/marks/{allocation}/submit', [ExamMarkController::class, 'submit'])->name('academic.marks.submit');
+
+    Route::get('/academic/results', [AcademicResultController::class, 'index'])->name('academic.results.index');
+    Route::post('/academic/results/{allocation}/publish', [AcademicResultController::class, 'publish'])->name('academic.results.publish');
+    Route::get('/academic/my-results', [AcademicResultController::class, 'myResults'])->name('academic.results.my-results');
+    Route::get('/students/{student}/transcript', [AcademicResultController::class, 'transcript'])->name('students.transcript');
 
     Route::get('/registration', [RegistrationController::class, 'index'])->name('registration.index');
     Route::post('/registration/start', [RegistrationController::class, 'start'])->name('registration.start');

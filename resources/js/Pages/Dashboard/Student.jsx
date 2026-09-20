@@ -17,21 +17,29 @@ export default function Student({ student, stats }) {
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                <StatCard label="Registered courses" value={stats.registered_courses} hint="Course registration pending" />
+                <StatCard label="Registered courses" value={stats.registered_courses} hint="Active enrolled courses" />
                 <StatCard label="Fee balance" value={formatMoney(stats.fee_balance)} />
-                <StatCard label="Results published" value={stats.results_published} hint="Academic module pending" />
+                <StatCard label="Results published" value={stats.results_published} hint="Published course grades" />
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
+                <Link href="/academic/my-results" className="text-indigo-600 text-sm font-medium hover:underline">
+                    My Examination Results &rarr;
+                </Link>
+                {student && (
+                    <Link href={`/students/${student.id}/transcript`} className="text-indigo-600 text-sm font-medium hover:underline">
+                        Academic Transcript
+                    </Link>
+                )}
                 <Link href="/registration" className="text-indigo-600 text-sm font-medium hover:underline">
-                    Course registration
+                    Course Registration
                 </Link>
                 <Link href="/finance/invoices" className="text-indigo-600 text-sm font-medium hover:underline">
-                    My invoices
+                    My Invoices
                 </Link>
                 {student && (
                     <Link href={`/students/${student.id}`} className="text-indigo-600 text-sm font-medium hover:underline">
-                        View my profile
+                        View My Profile
                     </Link>
                 )}
             </div>
