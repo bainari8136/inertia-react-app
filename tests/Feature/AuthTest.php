@@ -139,4 +139,25 @@ class AuthTest extends TestCase
         $response->assertSessionHasErrors('email');
         $this->assertStringContainsString('Too many login attempts', session('errors')->first('email'));
     }
+
+    public function test_lecturer_can_login_and_access_dashboard(): void
+    {
+        $lecturer = User::factory()->create([
+            'email' => 'lecturer@example.com',
+            'password' => 'Tanzania@1234',
+            'is_active' => true,
+        ]);
+        $lecturer->assignRole('Lecturer');
+
+        $response = $this->post(route('login'), [
+            'email' => 'lecturer@example.com',
+            'password' => 'Tanzania@1234',
+        ]);
+
+        $response->assertRedirect(route('dashboard'));
+        $this->assertAuthenticatedAs($lecturer);
+
+        $dashResponse = $this->actingAs($lecturer)->get(route('dashboard'));
+        $dashResponse->assertOk();
+    }
 }
