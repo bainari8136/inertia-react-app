@@ -26,6 +26,9 @@ export default function Student({ student, stats }) {
                 <Link href="/academic/my-results" className="text-indigo-600 text-sm font-medium hover:underline">
                     My Examination Results &rarr;
                 </Link>
+                <Link href="/clearance/my-clearance" className="text-indigo-600 text-sm font-medium hover:underline">
+                    Clearance & Graduation &rarr;
+                </Link>
                 {student && (
                     <Link href={`/students/${student.id}/transcript`} className="text-indigo-600 text-sm font-medium hover:underline">
                         Academic Transcript

@@ -39,6 +39,8 @@ class RolePermissionSeeder extends Seeder
             'users.view',
             'students.view',
             'registrations.view',
+            'clearance.view',
+            'clearance.approve',
             ...$financePerms,
         ]);
 
@@ -69,6 +71,8 @@ class RolePermissionSeeder extends Seeder
             'allocations.view',
             'marks.publish',
             'results.view',
+            'clearance.view',
+            'clearance.approve',
         ]);
         Role::findByName('Registrar', 'web')->syncPermissions([
             'users.view',
@@ -83,11 +87,17 @@ class RolePermissionSeeder extends Seeder
             'allocations.view',
             'marks.publish',
             'results.view',
+            'clearance.view',
+            'clearance.approve',
+            'clearance.certificate',
+            'graduation.manage',
         ]);
         Role::findByName('Student', 'web')->syncPermissions([
             'registrations.register',
             'invoices.view-own',
             'results.view-own',
+            'clearance.request',
+            'clearance.certificate',
         ]);
     }
 }

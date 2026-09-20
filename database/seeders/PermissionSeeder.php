@@ -41,6 +41,11 @@ class PermissionSeeder extends Seeder
         'marks.publish',
         'results.view',
         'results.view-own',
+        'clearance.request',
+        'clearance.view',
+        'clearance.approve',
+        'clearance.certificate',
+        'graduation.manage',
     ];
 
     public function run(): void

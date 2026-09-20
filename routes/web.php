@@ -4,11 +4,13 @@ use App\Http\Controllers\AcademicController;
 use App\Http\Controllers\AcademicResultController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClearanceController;
 use App\Http\Controllers\CourseAllocationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamMarkController;
 use App\Http\Controllers\FeeStructureController;
 use App\Http\Controllers\FinanceReportController;
+use App\Http\Controllers\GraduationCohortController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RegistrationApprovalController;
@@ -72,6 +74,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/academic/results/{allocation}/publish', [AcademicResultController::class, 'publish'])->name('academic.results.publish');
     Route::get('/academic/my-results', [AcademicResultController::class, 'myResults'])->name('academic.results.my-results');
     Route::get('/students/{student}/transcript', [AcademicResultController::class, 'transcript'])->name('students.transcript');
+
+    Route::get('/clearance', [ClearanceController::class, 'index'])->name('clearance.index');
+    Route::get('/clearance/my-clearance', [ClearanceController::class, 'myClearance'])->name('clearance.my-clearance');
+    Route::post('/clearance', [ClearanceController::class, 'store'])->name('clearance.store');
+    Route::get('/clearance/{clearance}', [ClearanceController::class, 'show'])->name('clearance.show');
+    Route::post('/clearance/stages/{stage}/approve', [ClearanceController::class, 'approveStage'])->name('clearance.stages.approve');
+    Route::post('/clearance/stages/{stage}/reject', [ClearanceController::class, 'rejectStage'])->name('clearance.stages.reject');
+    Route::get('/clearance/{clearance}/certificate', [ClearanceController::class, 'certificate'])->name('clearance.certificate');
+
+    Route::get('/graduation', [GraduationCohortController::class, 'index'])->name('graduation.index');
+    Route::post('/graduation', [GraduationCohortController::class, 'store'])->name('graduation.store');
+    Route::get('/graduation/{cohort}', [GraduationCohortController::class, 'show'])->name('graduation.show');
 
     Route::get('/registration', [RegistrationController::class, 'index'])->name('registration.index');
     Route::post('/registration/start', [RegistrationController::class, 'start'])->name('registration.start');

@@ -94,6 +94,16 @@ class Student extends Model
         return $this->hasMany(Invoice::class);
     }
 
+    public function clearanceRequests(): HasMany
+    {
+        return $this->hasMany(ClearanceRequest::class);
+    }
+
+    public function latestClearance(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(ClearanceRequest::class)->latestOfMany();
+    }
+
     public function canRegister(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
