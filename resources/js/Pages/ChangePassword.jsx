@@ -11,7 +11,7 @@ export default function ChangePassword() {
             <div className="max-w-lg">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Change password</h1>
                 <p className="text-sm text-gray-600 mb-6">
-                    Use a strong password with at least 8 characters.
+                    Choose a strong, secure password that meets university security policies.
                 </p>
 
                 {flash?.status && (
@@ -19,6 +19,17 @@ export default function ChangePassword() {
                         {flash.status}
                     </p>
                 )}
+
+                <div className="mb-6 rounded-lg border border-indigo-100 bg-indigo-50/50 p-4 text-xs text-indigo-900">
+                    <p className="font-semibold mb-1">Password Policy Requirements:</p>
+                    <ul className="list-disc list-inside space-y-0.5 text-indigo-800">
+                        <li>Minimum 8 characters</li>
+                        <li>At least one uppercase and one lowercase letter</li>
+                        <li>At least one number (0-9)</li>
+                        <li>At least one special character or symbol (e.g. !@#$%^&*)</li>
+                        <li>Must be different from your current password</li>
+                    </ul>
+                </div>
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <Form action="/change-password" method="PUT">

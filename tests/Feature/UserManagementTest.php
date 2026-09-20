@@ -33,8 +33,8 @@ class UserManagementTest extends TestCase
             ->post(route('users.store'), [
                 'name' => 'New Staff',
                 'email' => 'staff@university.test',
-                'password' => 'password123',
-                'password_confirmation' => 'password123',
+                'password' => 'SecureP@ss123!',
+                'password_confirmation' => 'SecureP@ss123!',
                 'role' => 'Lecturer',
                 'is_active' => true,
             ])
@@ -48,6 +48,29 @@ class UserManagementTest extends TestCase
         $this->assertTrue(
             User::where('email', 'staff@university.test')->first()->hasRole('Lecturer')
         );
+    }
+
+    public function test_user_creation_fails_when_password_does_not_meet_policy(): void
+    {
+        $registrar = User::factory()->create();
+        $registrar->assignRole('Registrar');
+
+        $this->actingAs($registrar)
+            ->from(route('users.create'))
+            ->post(route('users.store'), [
+                'name' => 'Weak User',
+                'email' => 'weak@university.test',
+                'password' => 'weak',
+                'password_confirmation' => 'weak',
+                'role' => 'Lecturer',
+                'is_active' => true,
+            ])
+            ->assertRedirect(route('users.create'))
+            ->assertSessionHasErrors('password');
+
+        $this->assertDatabaseMissing('users', [
+            'email' => 'weak@university.test',
+        ]);
     }
 
     public function test_student_cannot_view_users(): void

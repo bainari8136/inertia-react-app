@@ -79,12 +79,64 @@ class AuthTest extends TestCase
             ->from(route('password.change'))
             ->put(route('password.change.update'), [
                 'current_password' => 'old-password1',
-                'password' => 'new-password2',
-                'password_confirmation' => 'new-password2',
+                'password' => 'NewP@ssword2!',
+                'password_confirmation' => 'NewP@ssword2!',
             ])
             ->assertRedirect(route('password.change'))
             ->assertSessionHas('status');
 
-        $this->assertTrue(Hash::check('new-password2', $user->fresh()->password));
+        $this->assertTrue(Hash::check('NewP@ssword2!', $user->fresh()->password));
+    }
+
+    public function test_password_change_fails_when_password_does_not_meet_complexity(): void
+    {
+        $user = User::factory()->create([
+            'password' => 'CurrentP@ss1!',
+        ]);
+
+        $this->actingAs($user)
+            ->from(route('password.change'))
+            ->put(route('password.change.update'), [
+                'current_password' => 'CurrentP@ss1!',
+                'password' => 'simple',
+                'password_confirmation' => 'simple',
+            ])
+            ->assertRedirect(route('password.change'))
+            ->assertSessionHasErrors('password');
+    }
+
+    public function test_password_change_fails_when_new_password_matches_current(): void
+    {
+        $user = User::factory()->create([
+            'password' => 'CurrentP@ss1!',
+        ]);
+
+        $this->actingAs($user)
+            ->from(route('password.change'))
+            ->put(route('password.change.update'), [
+                'current_password' => 'CurrentP@ss1!',
+                'password' => 'CurrentP@ss1!',
+                'password_confirmation' => 'CurrentP@ss1!',
+            ])
+            ->assertRedirect(route('password.change'))
+            ->assertSessionHasErrors(['password' => 'The new password must be different from your current password.']);
+    }
+
+    public function test_login_is_throttled_after_consecutive_failed_attempts(): void
+    {
+        for ($i = 0; $i < 5; $i++) {
+            $this->post(route('login'), [
+                'email' => 'throttled@university.test',
+                'password' => 'wrong-pass',
+            ])->assertSessionHasErrors('email');
+        }
+
+        $response = $this->post(route('login'), [
+            'email' => 'throttled@university.test',
+            'password' => 'wrong-pass',
+        ]);
+
+        $response->assertSessionHasErrors('email');
+        $this->assertStringContainsString('Too many login attempts', session('errors')->first('email'));
     }
 }

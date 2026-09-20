@@ -53,7 +53,9 @@ export default function Edit({ user, roles }) {
                                         type="password"
                                         className="py-3 px-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-blue-500 sm:text-sm"
                                     />
-                                    <p className="mt-1 text-xs text-gray-500">Leave blank to keep current password</p>
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        Leave blank to keep current password. If setting a new password, it must be at least 8 characters and include uppercase, lowercase, numbers, and symbols.
+                                    </p>
                                     {errors.password && (
                                         <p className="mt-1.5 text-sm text-red-600">{errors.password}</p>
                                     )}

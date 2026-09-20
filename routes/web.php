@@ -14,10 +14,12 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
 
 Route::get('/', function () {
-    return redirect()->route('login.form');
+     return redirect()->route('login.form');
+
+    //echo "Welcome to University ERP";
     
 });
 

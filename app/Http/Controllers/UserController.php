@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -47,7 +48,7 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', 'min:8'],
+            'password' => ['required', 'confirmed', Password::defaults()],
             'role' => ['required', 'string', 'in:'.implode(',', RoleSeeder::ROLES)],
             'is_active' => ['boolean'],
         ]);
@@ -89,7 +90,7 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'password' => ['nullable', 'confirmed', 'min:8'],
+            'password' => ['nullable', 'confirmed', Password::defaults()],
             'role' => ['required', 'string', 'in:'.implode(',', RoleSeeder::ROLES)],
             'is_active' => ['boolean'],
         ]);

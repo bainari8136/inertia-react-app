@@ -52,6 +52,9 @@ export default function Create({ roles }) {
                                         required
                                         className="py-3 px-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-blue-500 sm:text-sm"
                                     />
+                                    <p className="mt-1 text-xs text-gray-500">
+                                        Min 8 characters, with uppercase, lowercase, numbers, and symbols.
+                                    </p>
                                     {errors.password && (
                                         <p className="mt-1.5 text-sm text-red-600">{errors.password}</p>
                                     )}
